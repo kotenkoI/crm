@@ -89,18 +89,22 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
                     <option key={status} value={status}>
                       <StatusLabel status={status} styled={false} />
                     </option>
-                  ),
+                  )
                 )}
               </select>
             </div>
             <div>
               <label htmlFor="countryId">Country</label>
               <select name="countryId" required>
-                {countries?.map((country) => (
-                  <option key={country.id} value={country.id}>
-                    {country.title}
-                  </option>
-                )) ?? <option value="">Loading countries...</option>}
+                {countries?.length ? (
+                  countries.map((country) => (
+                    <option key={country.id} value={country.id}>
+                      {country.title}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">No countries available</option>
+                )}
               </select>
             </div>
           </div>
@@ -109,11 +113,15 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
             <div>
               <label htmlFor="categoryId">Category</label>
               <select name="categoryId" required>
-                {categories?.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.title}
-                  </option>
-                )) ?? <option value="">Loading categories...</option>}
+                {categories?.length ? (
+                  categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.title}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">No categories available</option>
+                )}
               </select>
             </div>
             <InputField
