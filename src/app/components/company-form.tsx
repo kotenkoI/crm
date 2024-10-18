@@ -39,7 +39,7 @@ export interface CompanyFormProps {
 export default function CompanyForm({ onSubmit }: CompanyFormProps) {
   const queryClient = useQueryClient();
 
-  // Оновлення: додавання порожнього масиву за замовчуванням
+  // Додавання порожнього масиву за замовчуванням для категорій та країн
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
@@ -143,6 +143,7 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
               label="Description"
               placeholder="Description"
               name="description"
+              as="textarea"
             />
           </div>
         </div>
