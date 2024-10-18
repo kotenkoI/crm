@@ -39,13 +39,14 @@ export interface CompanyFormProps {
 export default function CompanyForm({ onSubmit }: CompanyFormProps) {
   const queryClient = useQueryClient();
 
-  const { data: categories } = useQuery({
+  // Оновлення: додавання порожнього масиву за замовчуванням
+  const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
     staleTime: 10 * 1000,
   });
 
-  const { data: countries } = useQuery({
+  const { data: countries = [] } = useQuery({
     queryKey: ['countries'],
     queryFn: getCountries,
     staleTime: 10 * 1000,
@@ -61,16 +62,22 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
   });
 
   const handleSubmit = async (values: CompanyFieldValues) => {
-    await mutateAsync({
-      ...values,
-      categoryTitle:
-        categories?.find(({ id }) => id === values.categoryId)?.title ?? '',
-      countryTitle:
-        countries?.find(({ id }) => id === values.countryId)?.title ?? '',
-    });
+    try {
+      console.log('Submitting form values:', values);
 
-    if (onSubmit) {
-      onSubmit(values);
+      await mutateAsync({
+        ...values,
+        categoryTitle:
+          categories?.find(({ id }) => id === values.categoryId)?.title ?? '',
+        countryTitle:
+          countries?.find(({ id }) => id === values.countryId)?.title ?? '',
+      });
+
+      if (onSubmit) {
+        onSubmit(values);
+      }
+    } catch (error) {
+      console.error('Error submitting the form:', error);
     }
   };
 
@@ -93,7 +100,7 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
                   <option key={status} value={status}>
                     <StatusLabel status={status} styled={false} />
                   </option>
-                ),
+                )
               )}
             </InputField>
             <InputField
@@ -103,7 +110,7 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
               name="countryId"
               as="select"
             >
-              {countries?.map((country) => (
+              {countries.map((country) => (
                 <option key={country.id} value={country.id}>
                   {country.title}
                 </option>
@@ -119,7 +126,7 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
               name="categoryId"
               as="select"
             >
-              {categories?.map((category) => (
+              {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.title}
                 </option>
