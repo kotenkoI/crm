@@ -64,9 +64,9 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
     await mutateAsync({
       ...values,
       categoryTitle:
-        categories.find(({ id }) => id === values.categoryId)?.title ?? '',
+        categories?.find(({ id }) => id === values.categoryId)?.title ?? '',
       countryTitle:
-        countries.find(({ id }) => id === values.countryId)?.title ?? '',
+        countries?.find(({ id }) => id === values.countryId)?.title ?? '',
     });
 
     if (onSubmit) {
@@ -81,50 +81,41 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
         <div className="flex gap-6">
           <div className="flex flex-col flex-1 gap-5">
             <LogoUploader label="Logo" placeholder="Upload photo" />
-            <InputField
-              required
-              label="Status"
-              placeholder="Status"
-              name="status"
-              as="select"
-            >
-              {(Object.values(CompanyStatus) as CompanyStatus[]).map(
-                (status) => (
-                  <option key={status} value={status}>
-                    <StatusLabel status={status} styled={false} />
+            <div>
+              <label htmlFor="status">Status</label>
+              <select name="status" required>
+                {(Object.values(CompanyStatus) as CompanyStatus[]).map(
+                  (status) => (
+                    <option key={status} value={status}>
+                      <StatusLabel status={status} styled={false} />
+                    </option>
+                  ),
+                )}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="countryId">Country</label>
+              <select name="countryId" required>
+                {countries?.map((country) => (
+                  <option key={country.id} value={country.id}>
+                    {country.title}
                   </option>
-                ),
-              )}
-            </InputField>
-            <InputField
-              required
-              label="Country"
-              placeholder="Country"
-              name="countryId"
-              as="select"
-            >
-              {countries?.map((country) => (
-                <option key={country.id} value={country.id}>
-                  {country.title}
-                </option>
-              ))}
-            </InputField>
+                )) ?? <option value="">Loading countries...</option>}
+              </select>
+            </div>
           </div>
           <div className="flex flex-col flex-1 gap-5">
             <InputField required label="Name" placeholder="Name" name="title" />
-            <InputField
-              required
-              label="Category"
-              placeholder="Category"
-              name="categoryId"
-              as="select"
-            >
-              {categories?.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.title}
-                </option>
-              ))}
-            </InputField>
+            <div>
+              <label htmlFor="categoryId">Category</label>
+              <select name="categoryId" required>
+                {categories?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.title}
+                  </option>
+                )) ?? <option value="">Loading categories...</option>}
+              </select>
+            </div>
             <InputField
               required
               label="Joined date"
